@@ -39,20 +39,38 @@ Models.User.deleteUser = async (userID) => {
         const data = await Models.User
             .destroy({
                 where: {
-                    id: userID
+                    userID: userID
                 }
             });
         if (data === 1) {
-            console.log('User deleted successful:');
+            console.log('User deleted successful');
+            return data;
         } else {
-            console.error('User delete error:');
+            throw new Error('No user with such userID');
         }
-        return data;
     } catch (error) {
         console.error('User delete error:', error);
         return error;
     }
 };
 
+Models.User.getUserByID = async (userID) => {
+    try {
+        const data = await Models.User
+            .findOne({
+                where: {
+                    userID: userID
+                }
+            });
+        if (data) {
+            return data;
+        } else {
+            throw new Error('No user with such userID');
+        }
+    } catch (error) {
+        console.error('User get error:', error);
+        return error;
+    }
+};
 
 module.exports = Models;

@@ -1,31 +1,26 @@
 const express = require('express');
 const adminRouter = new express.Router();
 const userController = require('../controllers/userController');
+const responseErrorsHandler = require('../services/userResponceHandler');
 
 adminRouter.get('/get-all-users', async (req, res) => {
-    res.send(await userController.getAllUsers());
+    const result = await userController.getAllUsers();
+    res.status(200).send(result);
 });
 
 adminRouter.post('/add-user', async (req, res) => {
-    const result = await userController.createUser(req);
-    if(result.errors) {
-        switch (result.errors[0].type) {
-            case 'unique violation': {
-                res.status(400).send({message: result.errors[0].message});
-                break;
-            }
-        }
-    } else {
-        res.send(result);
-    }
+    const handlersResult = responseErrorsHandler('add-user', await userController.createUser(req));
+    res.status(handlersResult.status).send(handlersResult);
 });
 
-adminRouter.delete('/delete-user', async (req, res) => {
-    if (await userController.deleteUser(req) === 0) {
-        res.status(400).send({message: 'Error to delete user. There is no user with that ID.'})
-    } else {
-        res.send({message: 'User deleted successful'});
-    }
+adminRouter.delete('/delete-user/:id', async (req, res) => {
+    const handlersResult = responseErrorsHandler('delete-user', await userController.deleteUser(req));
+    res.status(handlersResult.status).send(handlersResult);
+});
+
+adminRouter.get('/get-user/:id', async (req, res) => {
+    const handlersResult = responseErrorsHandler('get-user', await userController.getUser(req));
+    res.status(handlersResult.status).send(handlersResult);
 });
 
 module.exports = adminRouter;
