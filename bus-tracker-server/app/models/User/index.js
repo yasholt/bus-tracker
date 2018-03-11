@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('postgres://nrgppocc:SKLKY-v9qWeQl5kBTHDaqQZ-DMF35YUf@horton.elephantsql.com:5432/nrgppocc')
+const sequelize = require('../../../config/db');
+
 
 const describeUserTable = {
     userFirstName: {
