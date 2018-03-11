@@ -10,9 +10,10 @@ exports.getAllUsers = async () => {
 
 exports.createUser = async (req) => {
     const user = {
+        userID: 20,
         userFirstName: 'ololsha',
         userSecondName: 'second name',
-        userEmail: 'mail122@mail.com',
+        userEmail: '1mail122@mail.com',
         userType: false
     };
     return await UserModel.createUser(user);

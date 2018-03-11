@@ -8,10 +8,15 @@ adminRouter.get('/get-all-users', async (req, res) => {
 
 adminRouter.post('/add-user', async (req, res) => {
     const result = await userController.createUser(req);
-    switch (result.errors[0].type) {
-        case 'unique violation': {
-            res.status(400).send({ message: result.errors[0].message}); break;
+    if(result.errors) {
+        switch (result.errors[0].type) {
+            case 'unique violation': {
+                res.status(400).send({message: result.errors[0].message});
+                break;
+            }
         }
+    } else {
+        res.send(result);
     }
 });
 

@@ -13,7 +13,7 @@ Models.User.sync(/*{force:true}*/);
 
 Models.User.createUser = async (user) => {
     try {
-        const data = await  Models.User.build(user).save();
+        const data = await Models.User.build(user).save();
         console.log('Created new user successful:', data);
         return data;
     } catch (error) {
