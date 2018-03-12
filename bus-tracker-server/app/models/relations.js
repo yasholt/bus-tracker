@@ -5,7 +5,7 @@ const sequalize = require('../../config/db');
 Models.User = require('./User');
 
 //create models in DB
-Models.User.sync(/*{force:true}*/);
+Models.User.sync({force:true});
 
 //setMethods
 
@@ -39,7 +39,7 @@ Models.User.deleteUser = async (userID) => {
         const data = await Models.User
             .destroy({
                 where: {
-                    userID: userID
+                    id: userID
                 }
             });
         if (data === 1) {
@@ -69,6 +69,21 @@ Models.User.getUserByID = async (userID) => {
         }
     } catch (error) {
         console.error('User get error:', error);
+        return error;
+    }
+};
+
+Models.User.getUserByGoogleID = async (userGoogleID) => {
+    try {
+        const data = await Models.User.findOne({
+            where: {
+                userGoogleID: userGoogleID.toString()
+            }
+        });
+        console.log('Successful get user by google id', data);
+        return data
+    } catch (error) {
+        console.error('Error to get user by googleID:', error);
         return error;
     }
 };

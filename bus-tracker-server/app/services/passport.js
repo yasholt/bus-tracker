@@ -4,11 +4,11 @@ const keys = require('../../config/keys');
 const User = require('../models/relations').User;
 
 passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user.userGoogleID);
 });
 
-passport.deserializeUser(async (id, done) => {
-    const user = await User.getUserByGoogleID(profile.id);
+passport.deserializeUser(async (userGoogleID, done) => {
+    const user = await User.getUserByGoogleID(userGoogleID);
     done(null, user);
 });
 
@@ -30,7 +30,7 @@ passport.use(
                     userType: true
                 }
             });
-            done(null, user[0]);
+            done(null, user[0].dataValues);
         }
     )
 );

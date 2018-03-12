@@ -8,11 +8,6 @@ const keys = require('./config/keys');
 require('./app/services/checkConnection');
 require('./app/services/passport');
 
-// set Routers
-require('./app/routers/adminRouter')(app);
-require('./app/routers/driverRouter')(app);
-require('./app/routers/authRouter')(app);
-
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
 
@@ -26,3 +21,8 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
+// set Routers
+require('./app/routers/adminRouter')(app);
+require('./app/routers/driverRouter')(app);
+require('./app/routers/authRouter')(app);
