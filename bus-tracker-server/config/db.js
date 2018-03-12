@@ -1,9 +1,4 @@
 const Sequelize = require('sequelize');
-const prodKeys = require('./prod');
-const devKeys = require('./dev');
+const keys = require('./keys');
 
-if (process.env.NODE_ENV === 'production') {
-    module.exports = new Sequelize(prodKeys.postgresURI);
-} else {
-    module.exports = new Sequelize(devKeys.postgresURI);
-}
+module.exports = new Sequelize(keys.postgresURI);
