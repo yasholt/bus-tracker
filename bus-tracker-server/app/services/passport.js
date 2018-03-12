@@ -1,7 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const keys = require('../../config/keys');
-const User = require('../models/User/index');
+const User = require('../models/relations').User;
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
@@ -21,18 +21,16 @@ passport.use(
             proxy: true
         },
         async (accessToken, refreshToken, profile, done) => {
-            const existingUser = await User.getUserByGoogleID(profile.id);
-            if (existingUser) {
-                return done(null, existingUser);
-            }
-            const user = await User.createUser({
-                userID: profile.id,
-                userFirstName: profile.name.givenName,
-                userSecondName: profile.name.familyName,
-                userEmail: profile.emais[0].value,
-                userType: true
+            const user = await User.findOrCreate({
+                where: { userGoogleID: profile.id },
+                defaults: {
+                    userFirstName: profile.name.givenName,
+                    userSecondName: profile.name.familyName,
+                    userEmail: profile.emails[0].value,
+                    userType: true
+                }
             });
-            done(null, user);
+            done(null, user[0]);
         }
     )
 );
