@@ -1,9 +1,9 @@
 const userController = require('../controllers/userController');
 const responseErrorsHandler = require('../services/userResponceHandler');
-const { requireLogIn } = require('../middlewares/requireAuth');
+const { requireLogIn, checkIdRequirement } = require('../middlewares/requireAuth');
 
 module.exports = (app) => {
-    app.delete('/driver/delete-user/:id', requireLogIn, async (req, res) => {
+    app.delete('/driver/delete-user/:id', requireLogIn, checkIdRequirement, async (req, res) => {
         const handlersResult = responseErrorsHandler(
             'delete-user',
             await userController.deleteUser(req)

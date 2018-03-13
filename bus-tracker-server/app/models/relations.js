@@ -5,7 +5,7 @@ const sequalize = require('../../config/db');
 Models.User = require('./User');
 
 //create models in DB
-Models.User.sync({force:true});
+Models.User.sync(/*{force:true}*/);
 
 //setMethods
 
@@ -14,7 +14,7 @@ Models.User.sync({force:true});
 Models.User.createUser = async (user) => {
     try {
         const data = await Models.User.build(user).save();
-        console.log('Created new user successful:', data);
+        console.log('Created new user successful');
         return data;
     } catch (error) {
         console.error('Create new user error:', error);
@@ -26,7 +26,7 @@ Models.User.createUser = async (user) => {
 Models.User.getAllUsers = async () => {
     try {
         const data = await  Models.User.findAll();
-        console.log('Got all users successful:', data);
+        console.log('Got all users successful');
         return data;
     } catch (error) {
         console.error('Get all users error:', error);
@@ -59,7 +59,7 @@ Models.User.getUserByID = async (userID) => {
         const data = await Models.User
             .findOne({
                 where: {
-                    userID: userID
+                    id: userID
                 }
             });
         if (data) {
@@ -80,7 +80,7 @@ Models.User.getUserByGoogleID = async (userGoogleID) => {
                 userGoogleID: userGoogleID.toString()
             }
         });
-        console.log('Successful get user by google id', data);
+        console.log('Successful get user by google id');
         return data
     } catch (error) {
         console.error('Error to get user by googleID:', error);

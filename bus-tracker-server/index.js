@@ -9,7 +9,9 @@ require('./app/services/checkConnection');
 require('./app/services/passport');
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT);
+app.listen(PORT, ()=> {
+    console.log(`Server started on port ${PORT}`);
+});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
