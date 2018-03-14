@@ -15,22 +15,38 @@ class App extends Component {
         this.props.fetchUser();
     }
 
+    routesAccess() {
+        if (this.props.auth && this.props.auth.userType) {
+            return [
+                <Route path="/new-track" component={NewTrack} />,
+                <Route path="/tracks" component={Tracks} />,
+                <Route path="/new-user" component={NewUser} />,
+                <Route path="/profile" component={Profile} />,
+                <Route path="/users" component={Users} />
+            ];
+        } else if (this.props.auth && !this.props.auth.userType) {
+            return [
+                <Route path="/profile" component={Profile} />,
+                <Route path="/new-track" component={NewTrack} />,
+                <Route path="/tracks" component={Tracks} />
+            ];
+        }
+    }
+
     render() {
         return (
             <BrowserRouter>
                 <div>
                     <Header />
-                    <div>
-                        <Route path="/new-track" component={NewTrack} />
-                        <Route path="/new-user" component={NewUser} />
-                        <Route path="/profile" component={Profile} />
-                        <Route path="/tracks" component={Tracks} />
-                        <Route path="/users" component={Users} />
-                    </div>
+                    <div>{this.routesAccess()}</div>
                 </div>
             </BrowserRouter>
         );
     }
 }
 
-export default connect(null, actions)(App);
+function mapStateToProps({ auth }) {
+    return { auth };
+}
+
+export default connect(mapStateToProps, actions)(App);
