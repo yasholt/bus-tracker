@@ -1,4 +1,6 @@
 const Sequelize = require('sequelize');
 const keys = require('./keys');
 
-module.exports = new Sequelize(keys.postgresURI);
+module.exports = new Sequelize(keys.postgresURI, {
+    dialect: 'postgres'
+});
