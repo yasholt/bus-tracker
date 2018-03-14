@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Route, BrowserRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import * as actions from '../actions';
 
 import Header from './Header';
 import NewTrack from './NewTrack';
@@ -9,6 +11,10 @@ import Tracks from './Tracks';
 import Users from './Users';
 
 class App extends Component {
+    componentDidMount() {
+        this.props.fetchUser();
+    }
+
     render() {
         return (
             <BrowserRouter>
@@ -27,4 +33,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default connect(null, actions)(App);
