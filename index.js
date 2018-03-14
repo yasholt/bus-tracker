@@ -24,6 +24,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// set Routers
+require('./app/routers/adminRouter')(app);
+require('./app/routers/driverRouter')(app);
+require('./app/routers/authRouter')(app);
+
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('client/build'));
     const path = require('path');
@@ -31,8 +36,3 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     });
 }
-
-// set Routers
-require('./app/routers/adminRouter')(app);
-require('./app/routers/driverRouter')(app);
-require('./app/routers/authRouter')(app);
