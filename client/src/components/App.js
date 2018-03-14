@@ -3,7 +3,7 @@ import { Route, BrowserRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 
-import Header from './Header';
+import Header from './Header/Header';
 import NewTrack from './NewTrack';
 import NewUser from './NewUser';
 import Profile from './Profile';
@@ -17,19 +17,23 @@ class App extends Component {
 
     routesAccess() {
         if (this.props.auth && this.props.auth.userType) {
-            return [
-                <Route path="/new-track" component={NewTrack} />,
-                <Route path="/tracks" component={Tracks} />,
-                <Route path="/new-user" component={NewUser} />,
-                <Route path="/profile" component={Profile} />,
-                <Route path="/users" component={Users} />
-            ];
+            return (
+                <div>
+                    <Route path="/new-track" component={NewTrack} />
+                    <Route path="/tracks" component={Tracks} />
+                    <Route path="/new-user" component={NewUser} />
+                    <Route path="/profile" component={Profile} />
+                    <Route path="/users" component={Users} />
+                </div>
+            );
         } else if (this.props.auth && !this.props.auth.userType) {
-            return [
-                <Route path="/profile" component={Profile} />,
-                <Route path="/new-track" component={NewTrack} />,
-                <Route path="/tracks" component={Tracks} />
-            ];
+            return (
+                <div>
+                    <Route path="/profile" component={Profile} />
+                    <Route path="/new-track" component={NewTrack} />
+                    <Route path="/tracks" component={Tracks} />
+                </div>
+            );
         }
     }
 
@@ -38,7 +42,7 @@ class App extends Component {
             <BrowserRouter>
                 <div>
                     <Header />
-                    <div>{this.routesAccess()}</div>
+                    {this.routesAccess()}
                 </div>
             </BrowserRouter>
         );
