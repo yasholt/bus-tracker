@@ -23,6 +23,10 @@ const describeUserTable = {
     userType: {
         type: Sequelize.BOOLEAN,
         field: 'user_type'
+    },
+    userImageURL: {
+        type: Sequelize.STRING,
+        field: 'user_image_url'
     }
 };
 

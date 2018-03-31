@@ -1,19 +1,37 @@
-const Models = {};
 const sequalize = require('../../config/db');
 
 //getModels
-Models.User = require('./User');
+const User = require('./User');
+const Track = require('./Track');
+const Point = require('./Point');
+
+//setRelations
+Track.belongsTo(User, {foreignKey: 'userID'});
+User.hasMany(Track, {foreignKey: 'userID'});
+
+Point.belongsTo(Track, {foreignKey: 'trackID'});
+Track.hasMany(Point, {foreignKey: 'trackID'});
 
 //create models in DB
-Models.User.sync(/*{force:true}*/);
+/*User
+    .sync(/!*{force:true}*!/)
+    .then(() => {
+        Track
+            .sync(/!*{force:true}*!/)
+            .then(() => {
+                Point
+                    .sync(/!*{force:true}*!/);
+            })
+
+    });*/
 
 //setMethods
 
 // --- User Model ---
 
-Models.User.createUser = async (user) => {
+User.createUser = async (user) => {
     try {
-        const data = await Models.User.build(user).save();
+        const data = await User.build(user).save();
         console.log('Created new user successful');
         return data;
     } catch (error) {
@@ -22,10 +40,9 @@ Models.User.createUser = async (user) => {
     }
 };
 
-
-Models.User.getAllUsers = async () => {
+User.getAllUsers = async () => {
     try {
-        const data = await  Models.User.findAll();
+        const data = await  User.findAll();
         console.log('Got all users successful');
         return data;
     } catch (error) {
@@ -34,15 +51,15 @@ Models.User.getAllUsers = async () => {
     }
 };
 
-Models.User.deleteUser = async (userID) => {
+User.deleteUser = async (userID) => {
     try {
-        const data = await Models.User
+        const data = await User
             .destroy({
                 where: {
                     id: userID
                 }
             });
-        if (data === 1) {
+        if (data !== 0) {
             console.log('User deleted successful');
             return data;
         } else {
@@ -54,9 +71,9 @@ Models.User.deleteUser = async (userID) => {
     }
 };
 
-Models.User.getUserByID = async (userID) => {
+User.getUserByID = async (userID) => {
     try {
-        const data = await Models.User
+        const data = await User
             .findOne({
                 where: {
                     id: userID
@@ -73,9 +90,9 @@ Models.User.getUserByID = async (userID) => {
     }
 };
 
-Models.User.getUserByGoogleID = async (userGoogleID) => {
+User.getUserByGoogleID = async (userGoogleID) => {
     try {
-        const data = await Models.User.findOne({
+        const data = await User.findOne({
             where: {
                 userGoogleID: userGoogleID.toString()
             }
@@ -86,6 +103,199 @@ Models.User.getUserByGoogleID = async (userGoogleID) => {
         console.error('Error to get user by googleID:', error);
         return error;
     }
+};
+
+// --- Track Model ---
+
+Track.createTrack = async (trackData) => {
+
+    const {track, pointsArray} = trackData;
+
+    try {
+        const trackCreateResponse = await Track.build(track).save();
+        console.log('Created new track model instance successful', trackCreateResponse.dataValues);
+
+        pointsArray.forEach(point => {
+            point.trackID = trackCreateResponse.id;
+        });
+
+        try {
+            const pointsCreateResponse = await Point.bulkCreate(pointsArray);
+            console.log('Track and points created successful');
+
+            return {
+                trackCreateResponse,
+                pointsCreateResponse
+            }
+        } catch (error) {
+            console.error('Create new points error:', error);
+            return error;
+        }
+    } catch (error) {
+        console.error('Create new track error:', error);
+        return error;
+    }
+};
+
+Track.getAllTracks = async () => {
+    try {
+        const data = await Track.findAll({
+            include: [{
+                model: User
+            }]
+        });
+        console.log('Got all tracks with users successful');
+        return data;
+    } catch (error) {
+        console.error('Get all tracks with users error:', error);
+        return error;
+    }
+};
+
+Track.getTrack = async (trackID) => {
+    try {
+        const data = await Track.findOne({
+            where: {
+                id: trackID
+            },
+            include: {
+                model: Point
+            }
+        });
+        console.log('Got track with points successful');
+        return data;
+    } catch (error) {
+        console.error('Get track with all points error:', error);
+        return error;
+    }
+};
+
+Track.deleteTrack = async (trackID) => {
+    try {
+        const pointDeleteResponse = await Point.destroy({
+            where: {
+                trackID
+            }
+        });
+
+        console.log('pointDeleteResponse', pointDeleteResponse);
+
+        if (pointDeleteResponse !== 0) {
+            console.log('Points deleted successful');
+
+            try {
+                const trackDeleteResponse = await Track.destroy({
+                    where: {
+                        id: trackID
+                    }
+                });
+                console.log('Delete track with points successful', trackDeleteResponse);
+
+                return {
+                    pointDeleteResponse,
+                    trackDeleteResponse
+                }
+            } catch (error) {
+                console.error('Delete track with all points error:', error);
+                return error;
+            }
+        } else {
+            throw new Error('No points with such trackID');
+        }
+    } catch (error) {
+        console.error('Delete track with all points error:', error);
+        return error;
+    }
+};
+
+Track.updateTrack = async (trackID, trackData) => {
+
+    const {track, pointsArray} = trackData;
+
+    try {
+        const trackUpdateResponse = await Track.update(track, {
+                where: {
+                    id: trackID
+                }
+            });
+        console.log('Updated track model instance successful', trackUpdateResponse);
+
+        pointsArray.forEach(point => {
+            point.trackID = trackID;
+        });
+
+        try {
+            const pointsUpdateResponse = await Point.customBulkUpdate(pointsArray, trackID);
+            console.log('Track and points updated successfully');
+
+            return {
+                pointsUpdateResponse,
+                trackUpdateResponse
+            }
+        } catch (error) {
+            console.error('Update points error:', error);
+            return error;
+        }
+    } catch (error) {
+        console.error('Update track error:', error);
+        return error;
+    }
+};
+
+// --- Point Model ---
+
+Point.customBulkUpdate = (array, trackID) => { // <- our own bulkUpdate method for Sequelize.Model
+    return new Promise((resolve, reject) => {
+        let itemNumber = 0;
+
+        array.forEach(async item => {
+            if (!item.id) {
+
+                try {
+                    const data = await Point.build(item).save();
+
+                    console.log('Single point added successfully', data);
+                    itemNumber++;
+                    if (itemNumber === array.length) {
+                        resolve({
+                            status: 200,
+                            message: 'OK'
+                        })
+                    }
+
+                } catch (error) {
+                    console.error('Error to create single point', error);
+                    return error;
+                }
+            } else {
+                try {
+                    const data = await Point.update(item, {
+                        where: {
+                            id: item.id
+                        }
+                    });
+
+                    console.log('Single point updated successfully', data);
+                    itemNumber++;
+                    if (itemNumber === array.length) {
+                        resolve({
+                            status: 200,
+                            message: 'OK'
+                        })
+                    }
+                } catch (error) {
+                    console.error('Error to update single point', error);
+                    return error;
+                }
+            }
+        });
+    })
+};
+
+const Models = {
+    User,
+    Track,
+    Point
 };
 
 module.exports = Models;

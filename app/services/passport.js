@@ -27,7 +27,8 @@ passport.use(
                     userFirstName: profile.name.givenName,
                     userSecondName: profile.name.familyName,
                     userEmail: profile.emails[0].value,
-                    userType: false
+                    userType: false,
+                    userImageURL: profile.photos[0].value
                 }
             });
             done(null, user[0].dataValues);
