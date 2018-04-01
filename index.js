@@ -3,10 +3,27 @@ const app = express();
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
+const cors = require('cors');
 const keys = require('./config/keys');
 
 require('./app/services/checkConnection');
 require('./app/services/passport');
+
+let allowedOrigins = ['https://bus-tracker-prod.herokuapp.com/'];
+
+app.use(cors({
+    origin: function(origin, callback){
+        // allow requests with no origin
+        // (like mobile apps or curl requests)
+        if(!origin) return callback(null, true);
+        if(allowedOrigins.indexOf(origin) === -1){
+            let msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    }
+}));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
