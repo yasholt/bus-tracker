@@ -1,7 +1,7 @@
 const TrackModel = require('../models').Track;
 
-exports.getAllTracks = async () => {
-    return await TrackModel.getAllTracks();
+exports.getAllTracks = async (req) => {
+    return await TrackModel.getAllTracks(req.query.page, req.query.size);
 };
 
 exports.createTrack = async (req) => {
@@ -21,5 +21,5 @@ exports.deleteTrack = async (req) => {
 };
 
 exports.getUserTracks = async (req) => {
-    return await TrackModel.getTracksByUserID(req.params.id);
+    return await TrackModel.getTracksByUserID(req.params.id, req.query.page, req.query.size);
 };

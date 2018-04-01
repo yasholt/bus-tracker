@@ -11,7 +11,7 @@ module.exports = (app) => {
         async (req, res) => {
             const handlersResult = responseHandler(
                 'get-all',
-                await userController.getAllUsers()
+                await userController.getAllUsers(req)
             );
             res.status(handlersResult.status).send(handlersResult);
         }
@@ -89,7 +89,7 @@ module.exports = (app) => {
         async (req, res) => {
             const handlersResult = responseHandler(
                 'get-all',
-                await trackController.getAllTracks()
+                await trackController.getAllTracks(req)
             );
             res.status(handlersResult.status).send(handlersResult);
         }

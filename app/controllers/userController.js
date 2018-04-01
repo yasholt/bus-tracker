@@ -1,7 +1,7 @@
 const UserModel = require('../models').User;
 
-exports.getAllUsers = async () => {
-    return await UserModel.getAllUsers();
+exports.getAllUsers = async (req) => {
+    return await UserModel.getAllUsers(req.query.page, req.query.size);
 };
 
 exports.createUser = async (req) => {

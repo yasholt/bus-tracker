@@ -1,3 +1,5 @@
+const getPaginatedArray = require('../../services/paginationHelper');
+
 module.exports = (Track, Point, User) => {
 
     Track.createTrack = async (trackData) => {
@@ -27,7 +29,7 @@ module.exports = (Track, Point, User) => {
         }
     };
 
-    Track.getAllTracks = async () => {
+    Track.getAllTracks = async (page, size) => {
         try {
             const data = await Track.findAll({
                 include: [{
@@ -35,7 +37,18 @@ module.exports = (Track, Point, User) => {
                 }]
             });
             console.log('Get all tracks with users successfully');
-            return data;
+
+            if (page && size) {
+                return {
+                    amount: data.length,
+                    tracks: getPaginatedArray(data, +page, +size)
+                }
+            } else {
+                return {
+                    amount: data.length,
+                    tracks: data
+                }
+            }
         } catch (error) {
             console.error('Get all tracks with users error', error);
             return error;
@@ -139,7 +152,7 @@ module.exports = (Track, Point, User) => {
         }
     };
 
-    Track.getTracksByUserID = async (userID) => {
+    Track.getTracksByUserID = async (userID, page, size) => {
         try {
             const data = await Track.findAll({
                 where: {
@@ -148,7 +161,17 @@ module.exports = (Track, Point, User) => {
             });
             if (data) {
                 console.log('Get tracks by userID successfully');
-                return data;
+                if (page && size) {
+                    return {
+                        amount: data.length,
+                        tracks: getPaginatedArray(data, +page, +size)
+                    }
+                } else {
+                    return {
+                        amount: data.length,
+                        tracks: data
+                    }
+                }
             } else {
                 throw new Error('No tracks with such userID');
             }

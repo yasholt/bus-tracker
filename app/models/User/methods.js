@@ -1,3 +1,5 @@
+const getPaginatedArray = require('../../services/paginationHelper');
+
 module.exports = (User) => {
 
     User.createUser = async (user) => {
@@ -13,11 +15,21 @@ module.exports = (User) => {
         }
     };
 
-    User.getAllUsers = async () => {
+    User.getAllUsers = async (page, size) => {
         try {
             const data = await User.findAll();
             console.log('Get all users successfully');
-            return data;
+            if (page && size) {
+                return {
+                    amount: data.length,
+                    tracks: getPaginatedArray(data, +page, +size)
+                }
+            } else {
+                return {
+                    amount: data.length,
+                    tracks: data
+                }
+            }
         } catch (error) {
             console.error('Get all users error', error);
             return error;
