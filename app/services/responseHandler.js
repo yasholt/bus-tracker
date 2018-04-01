@@ -1,13 +1,13 @@
 module.exports = (requestType, response) => {
     switch (requestType) {
-        case 'get-all-users': {
+        case 'get-all': {
             return {
                 data: response,
                 status: 200
             };
         }
 
-        case 'get-user': {
+        case 'get': {
             if (response.message) {
                 return {
                     message: response.message,
@@ -21,7 +21,7 @@ module.exports = (requestType, response) => {
             }
         }
 
-        case 'delete-user': {
+        case 'delete': {
             if (response.message !== 'OK') {
                 return {
                     message: response.message,
@@ -35,7 +35,7 @@ module.exports = (requestType, response) => {
             }
         }
 
-        case 'add-user': {
+        case 'add': {
             if (response.errors) {
                 return {
                     message: response.errors[0].message,
@@ -48,13 +48,13 @@ module.exports = (requestType, response) => {
                 }
             } else {
                 return {
-                    message: 'OK',
+                    message: response.message,
                     status: 200
                 }
             }
         }
 
-        case 'update-user': {
+        case 'update': {
             if (response.name && response.parent) {
                 return {
                     message: response.name,

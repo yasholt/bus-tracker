@@ -1,31 +1,28 @@
-module.exports = (Track, Point) => {
+module.exports = (Track, Point, User) => {
 
     Track.createTrack = async (trackData) => {
-
         const {track, pointsArray} = trackData;
 
         try {
             const trackCreateResponse = await Track.build(track).save();
-            console.log('Created new track model instance successful', trackCreateResponse.dataValues);
 
             pointsArray.forEach(point => {
                 point.trackID = trackCreateResponse.id;
             });
 
             try {
-                const pointsCreateResponse = await Point.bulkCreate(pointsArray);
-                console.log('Track and points created successful');
+                await Point.bulkCreate(pointsArray);
+                console.log('Track and points created successfully');
 
                 return {
-                    trackCreateResponse,
-                    pointsCreateResponse
+                    message: 'OK'
                 }
             } catch (error) {
-                console.error('Create new points error:', error);
+                console.error('Create new points error', error);
                 return error;
             }
         } catch (error) {
-            console.error('Create new track error:', error);
+            console.error('Create new track error', error);
             return error;
         }
     };
@@ -37,10 +34,10 @@ module.exports = (Track, Point) => {
                     model: User
                 }]
             });
-            console.log('Got all tracks with users successful');
+            console.log('Get all tracks with users successfully');
             return data;
         } catch (error) {
-            console.error('Get all tracks with users error:', error);
+            console.error('Get all tracks with users error', error);
             return error;
         }
     };
@@ -55,10 +52,14 @@ module.exports = (Track, Point) => {
                     model: Point
                 }
             });
-            console.log('Got track with points successful');
-            return data;
+            if (data) {
+                console.log('Get track with points successfully');
+                return data;
+            } else {
+                throw new Error('No track with such trackID');
+            }
         } catch (error) {
-            console.error('Get track with all points error:', error);
+            console.error('Get track with all points error', error);
             return error;
         }
     };
@@ -71,78 +72,88 @@ module.exports = (Track, Point) => {
                 }
             });
 
-            console.log('pointDeleteResponse', pointDeleteResponse);
-
             if (pointDeleteResponse !== 0) {
-                console.log('Points deleted successful');
-
                 try {
-                    const trackDeleteResponse = await Track.destroy({
+                    await Track.destroy({
                         where: {
                             id: trackID
                         }
                     });
-                    console.log('Delete track with points successful', trackDeleteResponse);
+                    console.log('Delete track with points successfully');
 
                     return {
-                        pointDeleteResponse,
-                        trackDeleteResponse
+                        message: 'OK'
                     }
                 } catch (error) {
-                    console.error('Delete track with all points error:', error);
+                    console.error('Delete track with all points error', error);
                     return error;
                 }
             } else {
                 throw new Error('No points with such trackID');
             }
         } catch (error) {
-            console.error('Delete track with all points error:', error);
+            console.error('Delete track with all points error', error);
             return error;
         }
     };
 
     Track.updateTrack = async (trackID, trackData) => {
-
         const {track, pointsArray} = trackData;
 
         try {
-            const trackUpdateResponse = await Track.update(track, {
+            await Track.update(track, {
                 where: {
                     id: trackID
                 }
             });
-            console.log('Updated track model instance successful', trackUpdateResponse);
 
             pointsArray.forEach(point => {
                 point.trackID = trackID;
             });
 
             try {
-                const data = await Point.destroy({
+                await Point.destroy({
                     where: {
-                        trackID: trackID
+                        trackID
                     }
                 });
-                console.log('Old points deleted successfully', data);
 
                 try {
-                    const pointsUpdateResponse = await Point.bulkCreate(pointsArray);
+                    await Point.bulkCreate(pointsArray);
                     console.log('Track and points updated successfully');
 
                     return {
-                        pointsUpdateResponse,
-                        trackUpdateResponse
+                        message: 'OK'
                     }
                 } catch (error) {
-                    console.error('Create new points error:', error);
+                    console.error('Create new points error', error);
                     return error;
                 }
             } catch (error) {
-                console.error('Delete old points error:', error);
+                console.error('Delete old points error', error);
                 return error;
             }
         } catch (error) {
-            console.error('Update track error:', error);
+            console.error('Update track error', error);
+            return error;
+        }
+    };
+
+    Track.getTracksByUserID = async (userID) => {
+        try {
+            const data = await Track.findAll({
+                where: {
+                    userID
+                }
+            });
+            if (data) {
+                console.log('Get tracks by userID successfully');
+                return data;
+            } else {
+                throw new Error('No tracks with such userID');
+            }
+        } catch (error) {
+            console.error('Get tracks by userID error', error);
             return error;
         }
     };

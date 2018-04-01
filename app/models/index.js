@@ -16,7 +16,7 @@ syncModels();
 
 // setMethods
 require('./User/methods')(User);
-require('./Track/methods')(Track, Point);
+require('./Track/methods')(Track, Point, User);
 
 const Models = {
     User,

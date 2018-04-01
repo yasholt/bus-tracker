@@ -19,3 +19,7 @@ exports.updateTrack = async (req) => {
 exports.deleteTrack = async (req) => {
     return await TrackModel.deleteTrack(req.params.id);
 };
+
+exports.getUserTracks = async (req) => {
+    return await TrackModel.getTracksByUserID(req.params.id);
+};

@@ -19,7 +19,7 @@ module.exports = (User) => {
             console.log('Get all users successfully');
             return data;
         } catch (error) {
-            console.error('Get all users error:', error);
+            console.error('Get all users error', error);
             return error;
         }
     };
@@ -41,7 +41,7 @@ module.exports = (User) => {
                 throw new Error('No user with such userID');
             }
         } catch (error) {
-            console.error('User delete error:', error);
+            console.error('User delete error', error);
             return error;
         }
     };
@@ -55,6 +55,7 @@ module.exports = (User) => {
                     }
                 });
             if (data) {
+                console.log('Get user successfully');
                 return data;
             } else {
                 throw new Error('No user with such userID');
@@ -72,10 +73,10 @@ module.exports = (User) => {
                     userGoogleID: userGoogleID.toString()
                 }
             });
-            console.log('Successful get user by google id');
+            console.log('Successfully get user by google id');
             return data
         } catch (error) {
-            console.error('Error to get user by googleID:', error);
+            console.error('Error to get user by googleID', error);
             return error;
         }
     };

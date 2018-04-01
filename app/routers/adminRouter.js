@@ -1,6 +1,6 @@
 const userController = require('../controllers/userController');
 const trackController = require('../controllers/trackController');
-const userResponseHandler = require('../services/userResponseHandler');
+const responseHandler = require('../services/responseHandler');
 const { requireAdmin, requireLogIn } = require('../middleware/requireAuth');
 
 module.exports = (app) => {
@@ -9,8 +9,8 @@ module.exports = (app) => {
         requireLogIn,
         requireAdmin,
         async (req, res) => {
-            const handlersResult = userResponseHandler(
-                'get-all-users',
+            const handlersResult = responseHandler(
+                'get-all',
                 await userController.getAllUsers()
             );
             res.status(handlersResult.status).send(handlersResult);
@@ -22,8 +22,8 @@ module.exports = (app) => {
         requireLogIn,
         requireAdmin,
         async (req, res) => {
-            const handlersResult = userResponseHandler(
-                'add-user',
+            const handlersResult = responseHandler(
+                'add',
                 await userController.createUser(req)
             );
             res.status(handlersResult.status).send(handlersResult);
@@ -35,8 +35,8 @@ module.exports = (app) => {
         requireLogIn,
         requireAdmin,
         async (req, res) => {
-            const handlersResult = userResponseHandler(
-                'delete-user',
+            const handlersResult = responseHandler(
+                'delete',
                 await userController.deleteUser(req)
             );
             res.status(handlersResult.status).send(handlersResult);
@@ -48,8 +48,8 @@ module.exports = (app) => {
         requireLogIn,
         requireAdmin,
         async (req, res) => {
-            const handlersResult = userResponseHandler(
-                'get-user',
+            const handlersResult = responseHandler(
+                'get',
                 await userController.getUser(req)
             );
             res.status(handlersResult.status).send(handlersResult);
@@ -61,8 +61,8 @@ module.exports = (app) => {
         requireLogIn,
         requireAdmin,
         async (req, res) => {
-            const handlersResult = userResponseHandler(
-                'update-user',
+            const handlersResult = responseHandler(
+                'update',
                 await userController.updateUser(req)
             );
             res.status(handlersResult.status).send(handlersResult);
@@ -71,56 +71,66 @@ module.exports = (app) => {
 
     app.post(
         '/admin/add-track',
-        /*requireLogIn,
-        requireAdmin,*/
+        requireLogIn,
+        requireAdmin,
         async (req, res) => {
-            const handlersResult = await trackController.createTrack(req);
-
-            res.send(handlersResult);
+            const handlersResult = responseHandler(
+                'add',
+                await trackController.createTrack(req)
+            );
+            res.status(handlersResult.status).send(handlersResult);
         }
     );
 
     app.get(
         '/admin/get-all-tracks',
-        /*requireLogIn,
-        requireAdmin,*/
+        requireLogIn,
+        requireAdmin,
         async (req, res) => {
-            const handlersResult = await trackController.getAllTracks();
-
-            res.send(handlersResult);
+            const handlersResult = responseHandler(
+                'get-all',
+                await trackController.getAllTracks()
+            );
+            res.status(handlersResult.status).send(handlersResult);
         }
     );
 
     app.get(
         '/admin/get-track/:id',
-        /*requireLogIn,
-        requireAdmin,*/
+        requireLogIn,
+        requireAdmin,
         async (req, res) => {
-            const handlersResult = await trackController.getTrack(req);
-
-            res.send(handlersResult);
+            const handlersResult = responseHandler(
+                'get',
+                await trackController.getTrack(req)
+            );
+            res.status(handlersResult.status).send(handlersResult);
         }
     );
 
     app.put(
         '/admin/update-track/:id',
-        /*requireLogIn,
-        requireAdmin,*/
+        requireLogIn,
+        requireAdmin,
         async (req, res) => {
-            const handlersResult = await trackController.updateTrack(req);
-
-            res.send(handlersResult);
+            const handlersResult = responseHandler(
+                'update',
+                await trackController.updateTrack(req)
+            );
+            res.status(handlersResult.status).send(handlersResult);
         }
     );
 
     app.delete(
         '/admin/delete-track/:id',
-        /*requireLogIn,
-        requireAdmin,*/
+        requireLogIn,
+        requireAdmin,
         async (req, res) => {
-            const handlersResult = await trackController.deleteTrack(req);
-
-            res.send(handlersResult);
+            const handlersResult = responseHandler(
+                'delete',
+                await trackController.deleteTrack(req)
+            );
+            res.status(handlersResult.status).send(handlersResult);
         }
     );
 };
