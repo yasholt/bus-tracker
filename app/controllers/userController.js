@@ -15,3 +15,7 @@ exports.deleteUser = async (req) => {
 exports.getUser = async (req) => {
     return await UserModel.getUserByID(req.params.id);
 };
+
+exports.updateUser = async (req) => {
+    return await UserModel.updateUser(req.params.id, req.body);
+};

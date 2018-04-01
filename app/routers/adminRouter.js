@@ -1,6 +1,6 @@
 const userController = require('../controllers/userController');
 const trackController = require('../controllers/trackController');
-const responseErrorsHandler = require('../services/userResponceHandler');
+const userResponseHandler = require('../services/userResponseHandler');
 const { requireAdmin, requireLogIn } = require('../middleware/requireAuth');
 
 module.exports = (app) => {
@@ -9,8 +9,11 @@ module.exports = (app) => {
         requireLogIn,
         requireAdmin,
         async (req, res) => {
-            const result = await userController.getAllUsers();
-            res.status(200).send(result);
+            const handlersResult = userResponseHandler(
+                'get-all-users',
+                await userController.getAllUsers()
+            );
+            res.status(handlersResult.status).send(handlersResult);
         }
     );
 
@@ -19,7 +22,7 @@ module.exports = (app) => {
         requireLogIn,
         requireAdmin,
         async (req, res) => {
-            const handlersResult = responseErrorsHandler(
+            const handlersResult = userResponseHandler(
                 'add-user',
                 await userController.createUser(req)
             );
@@ -32,7 +35,7 @@ module.exports = (app) => {
         requireLogIn,
         requireAdmin,
         async (req, res) => {
-            const handlersResult = responseErrorsHandler(
+            const handlersResult = userResponseHandler(
                 'delete-user',
                 await userController.deleteUser(req)
             );
@@ -45,9 +48,22 @@ module.exports = (app) => {
         requireLogIn,
         requireAdmin,
         async (req, res) => {
-            const handlersResult = responseErrorsHandler(
+            const handlersResult = userResponseHandler(
                 'get-user',
                 await userController.getUser(req)
+            );
+            res.status(handlersResult.status).send(handlersResult);
+        }
+    );
+
+    app.put(
+        '/admin/update-user/:id',
+        requireLogIn,
+        requireAdmin,
+        async (req, res) => {
+            const handlersResult = userResponseHandler(
+                'update-user',
+                await userController.updateUser(req)
             );
             res.status(handlersResult.status).send(handlersResult);
         }

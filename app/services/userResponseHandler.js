@@ -1,5 +1,12 @@
 module.exports = (requestType, response) => {
     switch (requestType) {
+        case 'get-all-users': {
+            return {
+                data: response,
+                status: 200
+            };
+        }
+
         case 'get-user': {
             if (response.message) {
                 return {
@@ -15,14 +22,14 @@ module.exports = (requestType, response) => {
         }
 
         case 'delete-user': {
-            if (response.message) {
+            if (response.message !== 'OK') {
                 return {
                     message: response.message,
                     status: 400
                 }
             } else {
                 return {
-                    message: 'OK',
+                    message: response.message,
                     status: 200
                 }
             }
@@ -44,6 +51,20 @@ module.exports = (requestType, response) => {
                     message: 'OK',
                     status: 200
                 }
+            }
+        }
+
+        case 'update-user': {
+            if (response.name && response.parent) {
+                return {
+                    message: response.name,
+                    status: 400
+                }
+            } else {
+                return {
+                    message: response.message,
+                    status: 200
+                };
             }
         }
     }

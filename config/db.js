@@ -3,5 +3,6 @@ const keys = require('./keys');
 
 module.exports = new Sequelize(keys.postgresURI, {
     dialect: 'postgres',
-    logging: false
+    logging: false,
+    operatorsAliases: false
 });

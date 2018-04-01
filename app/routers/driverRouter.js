@@ -1,10 +1,10 @@
 const userController = require('../controllers/userController');
-const responseErrorsHandler = require('../services/userResponceHandler');
+const userResponseHandler = require('../services/userResponseHandler');
 const { requireLogIn, checkIdRequirement } = require('../middleware/requireAuth');
 
 module.exports = (app) => {
     app.delete('/driver/delete-user/:id', requireLogIn, checkIdRequirement, async (req, res) => {
-        const handlersResult = responseErrorsHandler(
+        const handlersResult = userResponseHandler(
             'delete-user',
             await userController.deleteUser(req)
         );
@@ -12,7 +12,7 @@ module.exports = (app) => {
     });
 
     app.get('/driver/get-user/:id', requireLogIn, async (req, res) => {
-        const handlersResult = responseErrorsHandler(
+        const handlersResult = userResponseHandler(
             'get-user',
             await userController.getUser(req)
         );
