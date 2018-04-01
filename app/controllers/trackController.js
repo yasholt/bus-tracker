@@ -1,4 +1,4 @@
-const TrackModel = require('../models/relations').Track;
+const TrackModel = require('../models').Track;
 
 exports.getAllTracks = async () => {
     return await TrackModel.getAllTracks();

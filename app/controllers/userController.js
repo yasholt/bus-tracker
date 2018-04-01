@@ -1,4 +1,4 @@
-const UserModel = require('../models/relations').User;
+const UserModel = require('../models').User;
 
 exports.getAllUsers = async () => {
     return await UserModel.getAllUsers();
