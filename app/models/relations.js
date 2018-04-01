@@ -214,10 +214,10 @@ Track.updateTrack = async (trackID, trackData) => {
 
     try {
         const trackUpdateResponse = await Track.update(track, {
-                where: {
-                    id: trackID
-                }
-            });
+            where: {
+                id: trackID
+            }
+        });
         console.log('Updated track model instance successful', trackUpdateResponse);
 
         pointsArray.forEach(point => {
@@ -225,71 +225,33 @@ Track.updateTrack = async (trackID, trackData) => {
         });
 
         try {
-            const pointsUpdateResponse = await Point.customBulkUpdate(pointsArray, trackID);
-            console.log('Track and points updated successfully');
+            const data = await Point.destroy({
+                where: {
+                    trackID: trackID
+                }
+            });
+            console.log('Old points deleted successfully', data);
 
-            return {
-                pointsUpdateResponse,
-                trackUpdateResponse
+            try {
+                const pointsUpdateResponse = await Point.bulkCreate(pointsArray);
+                console.log('Track and points updated successfully');
+
+                return {
+                    pointsUpdateResponse,
+                    trackUpdateResponse
+                }
+            } catch (error) {
+                console.error('Create new points error:', error);
+                return error;
             }
         } catch (error) {
-            console.error('Update points error:', error);
+            console.error('Delete old points error:', error);
             return error;
         }
     } catch (error) {
         console.error('Update track error:', error);
         return error;
     }
-};
-
-// --- Point Model ---
-
-Point.customBulkUpdate = (array, trackID) => { // <- our own bulkUpdate method for Sequelize.Model
-    return new Promise((resolve, reject) => {
-        let itemNumber = 0;
-
-        array.forEach(async item => {
-            if (!item.id) {
-
-                try {
-                    const data = await Point.build(item).save();
-
-                    console.log('Single point added successfully', data);
-                    itemNumber++;
-                    if (itemNumber === array.length) {
-                        resolve({
-                            status: 200,
-                            message: 'OK'
-                        })
-                    }
-
-                } catch (error) {
-                    console.error('Error to create single point', error);
-                    return error;
-                }
-            } else {
-                try {
-                    const data = await Point.update(item, {
-                        where: {
-                            id: item.id
-                        }
-                    });
-
-                    console.log('Single point updated successfully', data);
-                    itemNumber++;
-                    if (itemNumber === array.length) {
-                        resolve({
-                            status: 200,
-                            message: 'OK'
-                        })
-                    }
-                } catch (error) {
-                    console.error('Error to update single point', error);
-                    return error;
-                }
-            }
-        });
-    })
 };
 
 const Models = {
