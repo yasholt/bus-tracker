@@ -9,7 +9,7 @@ const keys = require('./config/keys');
 require('./app/services/checkConnection');
 require('./app/services/passport');
 
-let allowedOrigins = ['https://bus-tracker-prod.herokuapp.com/'];
+let allowedOrigins = ['http://localhost:3000'];
 
 app.use(cors({
     origin: function(origin, callback){
