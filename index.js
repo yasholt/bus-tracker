@@ -3,27 +3,11 @@ const app = express();
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
-const cors = require('cors');
+const path = require('path');
 const keys = require('./config/keys');
 
-require('./app/services/checkConnection');
-require('./app/services/passport');
-
-let allowedOrigins = ['http://localhost:3000'];
-
-app.use(cors({
-    origin: function(origin, callback){
-        // allow requests with no origin
-        // (like mobile apps or curl requests)
-        if(!origin) return callback(null, true);
-        if(allowedOrigins.indexOf(origin) === -1){
-            let msg = 'The CORS policy for this site does not ' +
-                'allow access from the specified Origin.';
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    }
-}));
+require('./server/services/checkConnection');
+require('./server/services/passport');
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
@@ -42,13 +26,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // set Routers
-require('./app/routers/adminRouter')(app);
-require('./app/routers/driverRouter')(app);
-require('./app/routers/authRouter')(app);
+require('./server/routers/adminRouter')(app);
+require('./server/routers/driverRouter')(app);
+require('./server/routers/authRouter')(app);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('client/build'));
-    const path = require('path');
     app.get('*', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     });
