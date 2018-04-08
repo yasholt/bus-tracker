@@ -1,0 +1,52 @@
+.ReactModal__Overlay {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    z-index: 4;
+}
+.ReactModal__Content {
+    border-radius: 0 !important;
+}
+.modal-component {
+    position: relative;
+    width: 400px;
+    padding: 50px;
+    text-align: center;
+    box-sizing: border-box;
+}
+.modal-component .modal-close {
+    position: absolute;
+    right: 25px;
+    top: 25px;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0) url('../../../images/close.png') no-repeat 50%;
+    background-size: 100%;
+    border: none;
+    transition: .3s;
+    opacity: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0);
+}
+.modal-component .modal-close:hover {
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+.modal-component h3 {
+    font-size: 25px;
+    font-family: 'GothamBold', sans-serif;
+    text-transform: uppercase;
+    color: #182436;
+    margin: 0 0 30px;
+}
+.modal-component .modal-confirm {
+    width: 100%;
+    text-align: center;
+    font-family: 'GothamMedium', sans-serif;
+    font-size: 20px;
+    padding: 10px 0;
+    color: #fff;
+    border: none;
+    background-color: rgba(255, 76, 82, 0.85);
+    transition: .3s;
+    cursor: pointer;
+    text-transform: uppercase;
+}

@@ -1,0 +1,54 @@
+.error-component {
+    position: absolute;
+    top: auto;
+    left: 50%;
+    right: auto;
+    bottom: 25px;
+    margin-right: -50%;
+    transform: translate(-50%, 0);
+    background-color: rgba(155, 0, 13, 0.75);
+    display: flex;
+    padding-left: 70px;
+    height: 70px;
+}
+.error-component:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0) url("../../../images/error_failed.svg") no-repeat 50%;
+    -webkit-background-size: 35px;
+    background-size: 35px;
+}
+.error-component .error-message {
+    color: #fff;
+    font-family: 'GothamBook', sans-serif;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    padding: 0 25px;
+}
+.error-component .close-button {
+    width: 70px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(141, 0, 13, 0.75);
+}
+.error-component button {
+    width: 25px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0) url("../../../images/error_close.svg") no-repeat 50%;
+    -webkit-background-size: contain;
+    background-size: contain;
+    border: none;
+    opacity: .75;
+    transition: .3s;
+    cursor: pointer;
+}
+.error-component button:hover {
+    opacity: 1;
+}

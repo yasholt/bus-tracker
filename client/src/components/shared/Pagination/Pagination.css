@@ -1,0 +1,68 @@
+.pagination-component {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.pagination-component ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.pagination-component button {
+    float: left;
+    width: 40px;
+    height: 40px;
+    font-family: 'GothamBook', sans-serif;
+    background: #e8e8ef;
+    color: #868ea3;
+    /*transition: .3s;*/
+    line-height: 40px;
+    font-size: 17px;
+    margin: 0 5px;
+    cursor: pointer;
+    border: none;
+}
+.pagination-component button:hover {
+    background-color: #dedee5;
+}
+.pagination-component button:first-child {
+    margin-left: 10px;
+}
+.pagination-component button:last-child {
+    margin-right: 0;
+}
+.pagination-component .start-button {
+    background: #e8e8ef url("../../../images/double_chevron.png") no-repeat 50%;
+    transform: rotate(180deg);
+    -webkit-background-size: 16px;
+    background-size: 16px;
+}
+.pagination-component .end-button {
+    background: #e8e8ef url("../../../images/double_chevron.png") no-repeat 50%;
+    -webkit-background-size: 16px;
+    background-size: 16px;
+}
+.pagination-component .prev-button {
+    background: #e8e8ef url("../../../images/chevron.png") no-repeat 50%;
+    -webkit-background-size: 8px;
+    background-size: 8px;
+    transform: rotate(180deg);
+}
+.pagination-component .next-button {
+    background: #e8e8ef url("../../../images/chevron.png") no-repeat 50%;
+    -webkit-background-size: 8px;
+    background-size: 8px;
+}
+.pagination-component button[disabled] {
+    cursor: not-allowed;
+    opacity: .75;
+}
+.pagination-component button[disabled]:hover {
+    opacity: .75;
+    background-color: #e8e8ef;
+}
+.pagination-component button.active {
+    background-color: #ff4c52;
+    color: #fff;
+    cursor: default;
+}

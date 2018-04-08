@@ -3,10 +3,11 @@ import {Route, BrowserRouter, Switch, Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import * as actions from '../../actions/index';
 
-import Header from '../Header/Header';
+import Header from '../shared/Header/Header';
 import AdminDashboard from '../AdminDashboard/AdminDashboard';
 import DriverDashboard from '../DriverDashboard/DriverDashboard';
 import {authModule} from '../../modules/auth';
+import './App.css';
 
 class App extends Component {
     constructor(props) {
@@ -56,6 +57,9 @@ class App extends Component {
                         <Redirect to='/'/>
                     )
                 )}/>
+                <Route path='*'>
+                    <Redirect to='/' />
+                </Route>
             </Switch>
         )
     }

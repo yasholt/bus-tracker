@@ -1,20 +1,28 @@
-export const authModule = {
-    isUserAdmin,
-    isUserAuthenticated
-};
-
-function isUserAdmin(cookieUser) {
+const isUserAdmin = (cookieUser) => {
     if (cookieUser.userType) {
         return true;
     } else {
         return false;
     }
-}
-
-function isUserAuthenticated(cookieUser) {
+};
+const isUserAuthenticated = (cookieUser) => {
     if (cookieUser) {
         return true;
     } else {
         return false;
     }
-}
+};
+
+const getMatchUrl = (cookieUser) => {
+    if (cookieUser.userType) {
+        return 'admin';
+    } else {
+        return 'driver';
+    }
+};
+
+export const authModule = {
+    isUserAdmin,
+    isUserAuthenticated,
+    getMatchUrl
+};

@@ -56,7 +56,7 @@ module.exports = (app) => {
 
     app.post(
         '/api/driver/add-track',
-        /*requireLogIn,*/
+        requireLogIn,
         async (req, res) => {
             const handlersResult = responseHandler(
                 'add',

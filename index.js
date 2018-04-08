@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
 const path = require('path');
-const keys = require('./config/keys');
+const keys = require('./server/config/keys');
 
 require('./server/services/checkConnection');
 require('./server/services/passport');
