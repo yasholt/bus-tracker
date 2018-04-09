@@ -107,23 +107,6 @@ class Tracks extends Component {
         }
     }
 
-    deleteTrack() {
-        const {isUserAdmin} = authModule;
-        const {auth} = this.props;
-
-        if (isUserAdmin(auth)) {
-            //admin stuff
-        } else {
-            /*tracksService.deleteTrack(selectedRows)
-                .then(() => {
-                    this.getRedeems(currentPage);
-                })
-                .catch(error => {
-                    this.showError(error);
-                });*/
-        }
-    }
-
     hideError() {
         this.setState({
             errorMsg: ''
@@ -139,6 +122,8 @@ class Tracks extends Component {
     render() {
         const {isRequestActive, errorMsg, tracks, amount, currentPage, deleteModalIsOpen} = this.state;
         const {getTracks, toggleDeleteModal, confirmDeleteModal, hideError} = this;
+        const {isUserAdmin} = authModule;
+        const {auth} = this.props;
 
         return (
             <div className="tracks-component">
@@ -166,11 +151,16 @@ class Tracks extends Component {
                                     <TableHeaderColumn>
                                         <span className="table-header-span">Track Name</span>
                                     </TableHeaderColumn>
+                                    {isUserAdmin(auth) &&
+                                    <TableHeaderColumn>
+                                        <span className="table-header-span">User Name</span>
+                                    </TableHeaderColumn>
+                                    }
                                     <TableHeaderColumn>
                                         <span className="table-header-span">Creation Date</span>
                                     </TableHeaderColumn>
                                     <TableHeaderColumn>
-                                        <span className="table-header-span">Update date</span>
+                                        <span className="table-header-span">Update Date</span>
                                     </TableHeaderColumn>
                                     <TableHeaderColumn
                                         style={{width:'100px'}}>
@@ -188,37 +178,35 @@ class Tracks extends Component {
                                                 key={item.id}>
                                                 <TableRowColumn
                                                     style={{width: '100px'}}>
-                                                    <span
-                                                        onClick={(e) => {e.stopPropagation()}}
-                                                        className="table-body-span">
+                                                    <span className="table-body-span">
                                                         {item.id}
                                                     </span>
                                                 </TableRowColumn>
                                                 <TableRowColumn>
-                                                    <span
-                                                        onClick={(e) => {e.stopPropagation()}}
-                                                        className="table-body-span">
+                                                    <span className="table-body-span">
                                                         {item.trackName}
                                                     </span>
                                                 </TableRowColumn>
+                                                {isUserAdmin(auth) &&
                                                 <TableRowColumn>
-                                                    <span
-                                                        onClick={(e) => {e.stopPropagation()}}
-                                                        className="table-body-span">
+                                                    <span className="table-body-span">
+                                                        {`${item.user.userFirstName} ${item.user.userSecondName}`}
+                                                    </span>
+                                                </TableRowColumn>
+                                                }
+                                                <TableRowColumn>
+                                                    <span className="table-body-span">
                                                         {formatDate(item.createdAt)}
                                                     </span>
                                                 </TableRowColumn>
                                                 <TableRowColumn>
-                                                    <span
-                                                        onClick={(e) => {e.stopPropagation()}}
-                                                        className="table-body-span">
+                                                    <span className="table-body-span">
                                                         {formatDate(item.updatedAt)}
                                                     </span>
                                                 </TableRowColumn>
                                                 <TableRowColumn
                                                     style={{width: '100px'}}>
-                                                    <span onClick={(e) => {e.stopPropagation()}}
-                                                          className="table-body-span actions">
+                                                    <span className="table-body-span actions">
                                                         <i className="material-icons particular-item-control"
                                                            title="Delete Track"
                                                            onClick={() => toggleDeleteModal(item.id)}>
@@ -228,7 +216,7 @@ class Tracks extends Component {
                                                            title="Edit Track">
                                                             edit
                                                         </i>
-                                                    </span>
+                                                    </span >
                                                 </TableRowColumn>
                                             </TableRow>
                                         )
